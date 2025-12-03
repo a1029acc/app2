@@ -1,18 +1,17 @@
 pipeline {
     agent any
     environment {
-        DOCKER_USER_NAME="somemone15me"
-        DOCKER_IMAGE_NAME="someone15me/pythonapp"
-        DOCKER_AUTH_TOKEN= credentials('DOCKER_AUTH_TOKEN')
+        // docker image name
+        DOCKER_IMAGE_NAME="someone15me/pythonpp"
+
+        // docker user name
+        DOCKER_USER_NAME="someone15me"
+
+        // docker user auth token
+        DOCKER_AUTH_TOKEN=credentials('DOCKER_AUTH_TOKEN')
     }
 
     stages {
-        stage('scm') {
-            steps {
-                echo "already taken care by Jenkins"
-            }
-        }
-
         stage('prepare env') {
             steps {
                 // execute a shell command
@@ -20,18 +19,39 @@ pipeline {
             }
         }
 
-        stage('test the application') {
+        // test the application
+        stage('test') {
             steps {
-                sh 'export PATH=$PATH:/home/vagrant/.local/bin'
                 sh 'pytest test_app.py'
             }
         }
 
-        stage('prepare the image') {
-            steps{
+        // build the docker image 
+        stage('build docker image') {
+            steps {
                 sh 'docker image build -t ${DOCKER_IMAGE_NAME} .'
             }
         }
-        
+
+        // login to docker hub
+        stage('docker login') {
+            steps {
+                sh 'echo ${DOCKER_AUTH_TOKEN} | docker login -u ${DOCKER_USER_NAME} --password-stdin'
+            }
+        }
+
+        // push the docker image to docker hub
+        stage('push docker image') {
+            steps {
+                sh 'docker image push ${DOCKER_IMAGE_NAME}'
+            }
+        }
+
+        // restart the service
+        stage('restart service') {
+            steps {
+                sh 'docker service update --force --image ${DOCKER_IMAGE_NAME} pythonapp'
+            }
+        }
     }
 }
