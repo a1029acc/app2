@@ -3,7 +3,7 @@ pipeline{
     // environment{}
     stages{
         stage('dummy'){
-            step{
+            steps{
                 echo "all good"
             }
         }
