@@ -3,7 +3,7 @@ pipeline {
     environment {
         DOCKER_USER_NAME="somemone15me"
         DOCKER_IMAGE_NAME="someone15me/pythonapp"
-        DOCKER_AUTH_TOKEN= credential('DOCKER_AUTH_TOKEN')
+        DOCKER_AUTH_TOKEN= credentials('DOCKER_AUTH_TOKEN')
     }
 
     stages {
