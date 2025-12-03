@@ -1,6 +1,10 @@
 pipeline {
     agent any
-    // environment {}
+    environment {
+        DOCKER_USER_NAME="somemone15me"
+        DOCKER_IMAGE_NAME="someone15me/pythonapp"
+        DOCKER_AUTH_TOKEN= credential('DOCKER_AUTH_TOKEN')
+    }
 
     stages {
         stage('scm') {
@@ -18,11 +22,16 @@ pipeline {
 
         stage('test the application') {
             steps {
+                sh 'export PATH=$PATH:/home/vagrant/.local/bin'
                 sh 'pytest test_app.py'
             }
         }
 
-        // stage('prepare the image') {
-        // }
+        stage('prepare the image') {
+            steps{
+                sh 'docker image build -t ${DOCKER_IMAGE_NAME} .'
+            }
+        }
+        
     }
 }
