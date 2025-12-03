@@ -2,10 +2,10 @@ pipeline{
     agent any
     // environment{}
     stages{
-        stage('scm'){
-		step{
-			echo "working"
-		}
+        stage('dummy'){
+            step{
+                echo "all good"
+            }
         }
     }
 }
