@@ -1,0 +1,11 @@
+pipeline{
+    agent any
+    // environment{}
+    stages{
+        stage('scm'){
+		step{
+			echo "working"
+		}
+        }
+    }
+}
